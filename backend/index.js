@@ -6,7 +6,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { v2 as cloudinary } from 'cloudinary';
-import multer from 'multer';
 /*
 > mongoose.connection
 > mongoose.connection.db
@@ -46,7 +45,7 @@ app.use(cookieParser());  // puts the cookie in the request object
 // app.use(cors({ origin: [process.env.ORIGIN], methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], credentials: true }));
 app.listen(port, async () => {
     console.log("Server is running on http://localhost:" + port);
-    victor.connectDB();
+    victor.connectDB("mongodb+srv://priyeshkjace101mongo:IyYmBc8pBot3gi71@cluster0.1z68r.mongodb.net/");
 
 })
 
@@ -144,7 +143,6 @@ const patient_signup = async (req, res) => {
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-
         const newPatient = new patientModels({
             name,
             email,
@@ -160,6 +158,7 @@ const patient_signup = async (req, res) => {
             // generate a token
             generateTokenAndSetCookie({ id: newPatient._id, role: "patient" }, res);
             await newPatient.save();
+            console.log("dd")
             return res.status(201).json({
                 message: "Patient created successfully", data: {
                     _id: newPatient._id,
